@@ -3,9 +3,18 @@ sudo: required
 services:
   - docker
 language: go
-go:
-  - "1.12.x"
-env: GOFLAGS=-mod=vendor
+
+matrix:
+	include:
+  - go: "1.12.x"
+    env: GOFLAGS=-mod=vendor
+  - go: "1.12.x"
+    env: GOFLAGS=-mod=vendor
+    env: CCC=1 # Enable cross compile check
+    cache:
+      directories:
+        - $HOME/.cache/go-build
+        - $HOME/gopath/pkg/mod
 
 git:
   depth: 1
@@ -21,7 +30,7 @@ install:
 script:
   - make lint
   - make test
-  - make compile
+  - make build
   - make website-lint
   - make website-test
 
